@@ -34,9 +34,6 @@ function formatDate(date, fromFormat, toFormat) {
 
   /* aqui dizemos que se o tamanho do array date for maior que o total de
   slots disponiveis para colocar a date, retornamos undefined */
-  if (parts.length !== tokensIn.length) {
-    return undefined;
-  }
 
   /* crio um objeto vazio */
   const map = {};
@@ -51,6 +48,10 @@ function formatDate(date, fromFormat, toFormat) {
     os 2 últimos dígitos ( 1997-> 97) */
     if (!value) {
       return undefined;
+    }
+
+    if (fromToken === toToken) {
+      return value;
     }
 
     if (fromToken === 'YYYY' && toToken === 'YY') {
