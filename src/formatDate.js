@@ -12,10 +12,12 @@ function formatDate(date, fromFormat, toFormat) {
   /* um array para armazenar a nova data */
   const newDate = [];
 
-  /* pegar o último elemento de fromFormate chamar de separador de entrada */
+  /* pegar o último elemento de fromFormate chamar de separador de
+  ['YYYY', 'MM', 'DD', '-'] entrada = '-' */
   const sepIn = fromFormat[fromFormat.length - 1];
 
-  /* pegar o último elemento de fromFormate chamar de separador de saída */
+  /* pegar o último elemento de fromFormate chamar de separador
+  ['DD', 'MM', 'YY', '.'] de saída = '.' */
   const sepOut = toFormat[toFormat.length - 1];
 
   /* pega a string date e transforma em um array,
@@ -47,17 +49,21 @@ function formatDate(date, fromFormat, toFormat) {
   function convertYear(value, fromToken, toToken) {
     /* para converter de YYYY para YY deixando
     os 2 últimos dígitos ( 1997-> 97) */
+    if (!value) {
+      return undefined;
+    }
+
     if (fromToken === 'YYYY' && toToken === 'YY') {
       return value.slice(-2);
     }
 
     /* para converter de YY para YYYY
     20YYif YY < 30e 19YY otherwise */
-    if (fromToken === 'YYYY' && toToken === 'YY') {
+    if (fromToken === 'YY' && toToken === 'YYYY') {
       return Number(value) < 30 ? '20' + value : '19' + value;
+    } else if (fromToken === 'YYYY' && toToken === 'YYYY') {
+      return value;
     }
-
-    return value;
   }
 
   /* para cada elemento de tokensOut ['YYYY', 'MM', 'DD'] */
@@ -67,22 +73,14 @@ function formatDate(date, fromFormat, toFormat) {
       newDate.push(map[token]);
       /* tive duvida nesse else if */
     } else if (token === 'YYYY' || token === 'YY') {
-      const year = map[token];
+      const year = map['YYYY'] || map['YY'];
       const fromToken = map['YYYY'] ? 'YYYY' : 'YY';
 
       newDate.push(convertYear(year, fromToken, token));
-      newDate.join(sepOut);
     }
   }
+
+  return newDate.join(sepOut);
 }
 
 module.exports = formatDate;
-
-/* formatDate(
-   date '2020-02-18',
-  from format ['YYYY', 'MM', 'DD', '-'],
-  to format ['YYYY', 'MM', 'DD', '.'],
-
-  tokensIn = ['2025', '02', '10']
-  parts = ['2020', '02', '18']
-); */
